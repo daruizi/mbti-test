@@ -34,6 +34,7 @@ export interface MBTIResult {
 // 历史记录
 export interface HistoryRecord {
   id: string;
+  name: string; // 测试者名字/昵称
   result: MBTIResult;
   date: string;
 }

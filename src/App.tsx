@@ -10,6 +10,7 @@ import { HistoryList } from './components/HistoryList';
 
 function App() {
   const [phase, setPhase] = useState<AppPhase>('welcome');
+  const [testerName, setTesterName] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [result, setResult] = useState<MBTIResult | null>(null);
@@ -29,6 +30,13 @@ function App() {
     });
   }, [currentQuestion]);
 
+  // 开始测试
+  const handleStartTest = useCallback(() => {
+    if (testerName.trim()) {
+      setPhase('testing');
+    }
+  }, [testerName]);
+
   // 下一题
   const handleNext = useCallback(() => {
     if (currentQuestion < questions.length - 1) {
@@ -42,6 +50,7 @@ function App() {
       // 保存到历史记录
       const record: HistoryRecord = {
         id: Date.now().toString(),
+        name: testerName.trim(),
         result: mbtiResult,
         date: new Date().toLocaleString('zh-CN'),
       };
@@ -49,7 +58,7 @@ function App() {
 
       setPhase('result');
     }
-  }, [currentQuestion, answers, setHistory]);
+  }, [currentQuestion, answers, testerName, setHistory]);
 
   // 上一题
   const handlePrev = useCallback(() => {
@@ -61,6 +70,7 @@ function App() {
   // 重新开始
   const handleRestart = useCallback(() => {
     setPhase('welcome');
+    setTesterName('');
     setCurrentQuestion(0);
     setAnswers([]);
     setResult(null);
@@ -93,6 +103,21 @@ function App() {
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+            {/* 名字输入 */}
+            <div className="mb-6">
+              <label className="block text-left text-gray-700 font-medium mb-2">
+                请输入你的名字或昵称
+              </label>
+              <input
+                type="text"
+                value={testerName}
+                onChange={(e) => setTesterName(e.target.value)}
+                placeholder="用于记录测试结果"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:outline-none transition-colors text-gray-800"
+                maxLength={20}
+              />
+            </div>
+
             <div className="space-y-4 text-left text-gray-600">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">⏱️</span>
@@ -111,8 +136,13 @@ function App() {
 
           <div className="space-y-4">
             <button
-              onClick={() => setPhase('testing')}
-              className="w-full px-8 py-4 bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
+              onClick={handleStartTest}
+              disabled={!testerName.trim()}
+              className={`w-full px-8 py-4 font-semibold text-lg rounded-xl shadow-lg transition-all ${
+                testerName.trim()
+                  ? 'bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white hover:shadow-xl transform hover:scale-105'
+                  : 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
+              }`}
             >
               开始测试
             </button>
@@ -183,6 +213,7 @@ function App() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4 md:p-8">
         <ResultCard
+          name={testerName}
           result={result}
           onRestart={handleRestart}
           onViewHistory={() => setPhase('history')}

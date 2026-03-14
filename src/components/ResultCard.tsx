@@ -2,16 +2,18 @@ import type { MBTIResult } from '../types';
 import { dimensionLabels } from '../data/questions';
 
 interface ResultCardProps {
+  name: string;
   result: MBTIResult;
   onRestart: () => void;
   onViewHistory: () => void;
 }
 
-export function ResultCard({ result, onRestart, onViewHistory }: ResultCardProps) {
+export function ResultCard({ name, result, onRestart, onViewHistory }: ResultCardProps) {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {/* 类型展示 */}
       <div className="bg-gradient-to-br from-primary-500 to-secondary-600 rounded-2xl shadow-xl p-8 text-white text-center">
+        <p className="text-lg opacity-80 mb-2">{name} 的测试结果</p>
         <h1 className="text-5xl md:text-6xl font-bold mb-4">{result.type}</h1>
         <p className="text-lg md:text-xl opacity-90">{result.description}</p>
       </div>

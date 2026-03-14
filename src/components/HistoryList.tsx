@@ -46,11 +46,14 @@ export function HistoryList({ records, onBack, onDelete }: HistoryListProps) {
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
+                  <span className="text-lg font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-lg">
+                    {record.name}
+                  </span>
                   <span className="text-2xl font-bold text-primary-600">
                     {record.result.type}
                   </span>
-                  <span className="text-sm text-gray-400">{record.date}</span>
                 </div>
+                <p className="text-sm text-gray-400 mb-2">{record.date}</p>
                 <p className="text-gray-600 text-sm">{record.result.description}</p>
 
                 {/* 简化的维度展示 */}
